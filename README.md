@@ -33,5 +33,7 @@ pip install requirements.txt
 5. Execute the script
 
 ```sh
-py calc_time.py --source .\..\folder --destination .\..\file.csv --full-stat
+py main.py --source .\..\folder --output .\..\file.csv
 ```
+
+As result a .csv file will be generated with full statstic of all found files (images, charts, tables and so on)
