@@ -4,6 +4,7 @@ import os
 import json
 
 from analyzer.word_reader import WordReader
+from analyzer.excel_reader import ExcelReader
 
 parser = argparse.ArgumentParser(description='Python based tool for calculating time expenses')
 
@@ -51,6 +52,9 @@ def __main() -> None:
 	        if file.endswith('.docx'):
 	            wr = WordReader(os.path.join(r, file))
 	            stats.append(wr.get_stats())
+	        if file.endswith('.xlsx'):
+	        	wr = ExcelReader(os.path.join(r, file))
+	        	stats.append(wr.get_stats())
 	
 	__write_output(stats)
 

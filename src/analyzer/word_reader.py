@@ -1,13 +1,15 @@
 import docx2txt
 import zipfile
 from docx.api import Document
+from analyzer.abstract_reader import AbstractReader
 
-
-class WordReader:
+class WordReader(AbstractReader):
 
 	def __init__(self, filename):
-		self.filename = filename
-		self.total_chars, self.total_words, self.total_charts, self.total_images, self.total_tables = 0, 0, 0, 0, 0
+		AbstractReader.__init__(self, self.__count, filename)
+		
+	def get_stats(self):
+		return AbstractReader.get_stats(self)
 
 	def __count(self):
 		try:
@@ -28,14 +30,3 @@ class WordReader:
 		self.total_charts = len(list(charts))
 		self.total_images = len(list(images))
 		self.total_tables = len(document.tables)
-
-	def get_stats(self):
-		self.__count()
-		return {
-			'file': self.filename,
-			'chars': self.total_chars,
-			'words': self.total_words,
-			'charts': self.total_charts,
-			'images': self.total_images,
-			'tables': self.total_tables
-		}
