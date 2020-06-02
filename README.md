@@ -42,6 +42,6 @@ File | Characters | Words | Images | Tables | Charts
 --- | --- | --- | --- |--- |--- 
 \time-expenses\test\file.docx | 1511 | 247 | 0 | 1 | 0
 \time-expenses\test\file2.docx|460|80|1|2|1
---- | --- | --- | --- |--- |--- 
+ | | | | |
 Total|1971|327|1|3|1
 
