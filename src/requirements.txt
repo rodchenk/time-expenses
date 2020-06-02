@@ -1,3 +1,4 @@
 docx2txt
 argparse==1.4.0
 python-docx
+xlrd
