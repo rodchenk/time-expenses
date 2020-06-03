@@ -20,7 +20,11 @@ cd time-expenses
 
 ```json
 {
-  "key": "value"
+  "units": "minutes",
+  "table": 35,
+  "word": 0.5,
+  "image": 30,
+  "chart": 25
 }
 ```
 
