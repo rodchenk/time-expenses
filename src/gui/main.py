@@ -7,6 +7,7 @@ import time
 import os
 import sys
 import subprocess
+import threading
 
 try:
 	from src.docs import config
@@ -88,7 +89,7 @@ class Gui:
 
 			self.progress['value'] = 2 * x
 			self.top.update_idletasks() 
-			time.sleep(0.05) 
+			time.sleep(0.01) 
 
 
 	def __hide_progress(self):
@@ -100,7 +101,8 @@ class Gui:
 		if not source or not output:
 			return
 
-		self.__show_progress()
+		# self.__show_progress()
+		threading.Thread(target=self.__show_progress).start()
 
 		result = self.__call_script(source, output)
 
