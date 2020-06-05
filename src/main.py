@@ -5,6 +5,7 @@ import json
 
 from analyzer.word_reader import WordReader
 from analyzer.excel_reader import ExcelReader
+from docs import config
 
 parser = argparse.ArgumentParser(description='Python based tool for calculating time expenses')
 
@@ -14,7 +15,7 @@ parser.add_argument('-o', '--output', dest='output', help='Output file to write 
 args = parser.parse_args()
 
 CSV_SEPARATOR = ';'
-CSV_HEADER = 'File{0}Characters{0}Words{0}Images{0}Tables{0}Charts\n'.format(CSV_SEPARATOR)
+CSV_HEADER = 'File{0}Characters{0}Words{0}Images{0}Tables{0}Charts{0}Time in {1}\n'.format(CSV_SEPARATOR, config.UNITS)
 
 
 def __write_output(stats) -> None:
@@ -24,7 +25,8 @@ def __write_output(stats) -> None:
 		'words': 0,
 		'images': 0,
 		'tables': 0,
-		'charts': 0
+		'charts': 0,
+		'time': 0
 	}
 	with open(abs_source_path, 'w') as output:
 		output.write(CSV_HEADER)
@@ -36,10 +38,13 @@ def __write_output(stats) -> None:
 			total['tables'] += _stat['tables']
 			total['charts'] += _stat['charts']
 
-			output.write('{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6}\n'.format(CSV_SEPARATOR, _stat['file'], _stat['chars'], _stat['words'], _stat['images'], _stat['tables'], _stat['charts']))
+			time = float(_stat['words']) * config.WORD + float(_stat['images']) * config.IMAGE + float(_stat['tables']) * config.TABLE + float(_stat['charts']) * config.CHART
+			total['time'] += time
+
+			output.write('{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6}{0}{7}\n'.format(CSV_SEPARATOR, _stat['file'], _stat['chars'], _stat['words'], _stat['images'], _stat['tables'], _stat['charts'], time))
 
 		output.write('\n')
-		output.write('{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6}\n'.format(CSV_SEPARATOR, 'Total', total['chars'], total['words'], total['images'], total['tables'], total['charts']))
+		output.write('{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6}{0}{7}\n'.format(CSV_SEPARATOR, 'Total', total['chars'], total['words'], total['images'], total['tables'], total['charts'], total['time']))
 
 
 def __main() -> None:

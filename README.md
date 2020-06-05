@@ -18,14 +18,10 @@ cd time-expenses
 
 3. Define your custom config
 
-```json
-{
-  "units": "minutes",
-  "table": 35,
-  "word": 0.5,
-  "image": 30,
-  "chart": 25
-}
+```py
+DARK_THEME = True
+UNITS = 'minutes'
+CHART = 45
 ```
 
 4. Install dependencies
@@ -42,10 +38,10 @@ py main.py --source .\..\folder --output .\..\file.csv
 
 As result a .csv file will be generated with full statstic of all found files (images, charts, tables and so on)
 
-File | Characters | Words | Images | Tables | Charts
---- | --- | --- | --- |--- |--- 
-\time-expenses\test\file.docx | 1511 | 247 | 0 | 1 | 0
-\time-expenses\test\file2.docx|460|80|1|2|1
- | | | | |
-Total|1971|327|1|3|1
+File | Characters | Words | Images | Tables | Charts | Time in min
+--- | --- | --- | --- |--- |--- | ---
+\time-expenses\test\file.docx | 1511 | 247 | 0 | 1 | 0 | 87
+\time-expenses\test\file2.docx|460|80|1|2|1|52
+ | | | | | |
+Total|1971|327|1|3|1|139
 

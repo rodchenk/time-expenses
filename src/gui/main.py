@@ -1,5 +1,6 @@
 from tkinter.filedialog import askopenfilename, askdirectory, asksaveasfilename
 import tkinter
+from tkinter import messagebox
 from tkinter.ttk import Progressbar, Style
 from PIL import ImageTk, Image
 import time
@@ -95,24 +96,30 @@ class Gui:
 
 	def __gen(self):
 		source, output, append = self.sourceValue.get(), self.outputValue.get(), self.should_append.get() == 1
-		print('Source:\t%s' % source)
-		print('Output:\t%s' % output)
-		print('Append:\t%s' % append)
 
 		if not source or not output:
 			return
 
 		self.__show_progress()
 
-		cli_path = os.path.dirname(__file__) + './../main.py'
-		command = 'python %s -s %s -o %s' % (cli_path, source, output)
-		print(command)
-		p = subprocess.Popen(command, shell=True, stdout = subprocess.PIPE)
+		result = self.__call_script(source, output)
 
-		stdout, stderr = p.communicate()
-		print(p.returncode)
+		if result == 0:
+			_open = messagebox.askyesno('Success', 'Report has been generated. Do you want to open it?')
+			if _open:
+				subprocess.Popen(output, shell=True, stdout = subprocess.PIPE)
+		else:
+			messagebox.showerror('Error', 'An error has occured')
 
 		self.__hide_progress()
+
+	def __call_script(self, source, output):
+		cli_path = os.path.dirname(__file__) + './../main.py'
+		command = 'python %s -s %s -o %s' % (cli_path, source, output)
+		p = subprocess.Popen(command, shell=True, stdout = subprocess.PIPE)
+		stdout, stderr = p.communicate()
+
+		return p.returncode
 
 
 	def __load_source(self):
