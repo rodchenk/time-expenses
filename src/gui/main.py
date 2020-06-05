@@ -1,8 +1,18 @@
-from tkinter.filedialog import askopenfilename, askdirectory
+from tkinter.filedialog import askopenfilename, askdirectory, asksaveasfilename
 import tkinter
 from tkinter.ttk import Progressbar, Style
 from PIL import ImageTk, Image
 import time
+import os
+import sys
+import subprocess
+
+try:
+	from src.docs import config
+except Exception as e:
+	print(str(e))
+	sys.exit(0)
+
 
 class Gui:
 
@@ -21,18 +31,20 @@ class Gui:
 	APP_NAME = 'Timefy'
 
 	def __init__(self):
-		self.THEME = self.DARK_THEME
+		self.THEME = self.DARK_THEME if config.DARK_THEME else self.LIGHT_THEME
+		gui_dir = os.path.dirname(__file__)
+		assets_dir = gui_dir + './../assets/'
 
 		self.top = tkinter.Tk()
 		self.top.title(self.APP_NAME)
 		self.top.geometry("500x175")
 		self.top.resizable(False, False)
-		self.top.iconbitmap(default='./../assets/favicon.ico')
+		self.top.iconbitmap(default=assets_dir + 'favicon.ico')
 
 		frame = tkinter.Frame(self.top, padx=10, pady=10, bg=self.THEME['PRIMARY'])
 		frame.pack(fill=tkinter.BOTH, expand=True)
 		
-		searchImg = ImageTk.PhotoImage(Image.open('./../assets/search.png').resize((20, 20), Image.ANTIALIAS))
+		searchImg = ImageTk.PhotoImage(Image.open(assets_dir + 'search.png').resize((20, 20), Image.ANTIALIAS))
 		sourceButton = tkinter.Button(frame, image=searchImg, padx=0, relief=tkinter.FLAT, command=self.__load_source, bg=self.THEME['PRIMARY'])
 		sourceButton.image = searchImg
 		sourceButton.grid(column=2, row=0, padx=(5, 5), pady=(5, 0))
@@ -82,9 +94,6 @@ class Gui:
 		self.progress.grid_forget()
 
 	def __gen(self):
-		self.__show_progress()
-
-		self.__hide_progress()
 		source, output, append = self.sourceValue.get(), self.outputValue.get(), self.should_append.get() == 1
 		print('Source:\t%s' % source)
 		print('Output:\t%s' % output)
@@ -93,15 +102,35 @@ class Gui:
 		if not source or not output:
 			return
 
+		self.__show_progress()
+
+		cli_path = os.path.dirname(__file__) + './../main.py'
+		command = 'python %s -s %s -o %s' % (cli_path, source, output)
+		print(command)
+		p = subprocess.Popen(command, shell=True, stdout = subprocess.PIPE)
+
+		stdout, stderr = p.communicate()
+		print(p.returncode)
+
+		self.__hide_progress()
+
 
 	def __load_source(self):
 		dname = askdirectory()
 		self.sourceValue.set(dname)
 
 	def __load_output(self):
-		fname = askopenfilename(filetypes=(("CSV Files", "*.csv;"), ("All files", "*.*") ))
+		fname = asksaveasfilename(filetypes=(("CSV Files", "*.csv;"), ("All files", "*.*") ))
+		if not fname.endswith('.csv'):
+			if fname[-1:] == '.':
+				fname = fname[:-1]
+			fname += '.csv'
+		# fname = askopenfilename(filetypes=(("CSV Files", "*.csv;"), ("All files", "*.*") ))
 		self.outputValue.set(fname)
 
 
 if __name__ == '__main__':
-	Gui().run()
+	try:
+		Gui().run()
+	except IOError as e:
+		print(str(e))
