@@ -19,21 +19,30 @@ cd time-expenses
 3. Define your custom config
 
 ```py
+# src/config.py
+
 DARK_THEME = True
 UNITS = 'minutes'
 CHART = 45
+...
 ```
 
 4. Install dependencies
 
 ```sh
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 5. Execute the script
 
 ```sh
-py main.py --source .\..\folder --output .\..\file.csv
+py src/main.py --source .\..\folder --output .\..\file.csv
+```
+
+Or use the GUI-Wrapper:
+
+```sh
+py src/gui/main.py
 ```
 
 As result a .csv file will be generated with full statstic of all found files (images, charts, tables and so on)
