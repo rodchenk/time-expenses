@@ -65,10 +65,17 @@ def __main() -> None:
 
 
 if __name__ == '__main__':
+	from datetime import datetime
+	start = datetime.now()
+
 	try:
 		__main()
 	except Exception as e:
-		print(e)
-		print('---------------------%s---------------------' % 'Calculation canceled')
+		end = datetime.now() - start
+		print('---Calculation caceled---\n')
+		print('Total time:\t%s' % round(end, 2))
+		print('Error:\t%s' % str(e))
 	else:
-		print('---------------------%s---------------------' % 'Calculation successful')
+		end = datetime.now() - start
+		print('---Calculation successful---\n')
+		print('Total time:\t%s sec' % round(end.total_seconds(), 2))

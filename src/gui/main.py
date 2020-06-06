@@ -20,14 +20,16 @@ class Gui:
 
 	DARK_THEME = {
 		'PRIMARY': '#222',
-		'SECONDARY': '#444',
-		'TEXT': '#fff'
+		'SECONDARY': '#333',
+		'TEXT': '#fff',
+		'SEC_TEXT': '#4d5c69'
 	}
 
 	LIGHT_THEME = {
 		'PRIMARY': '#fff',
 		'SECONDARY': '#eee',
-		'TEXT': '#222'
+		'TEXT': '#222',
+		'SEC_TEXT': '#a9b5c0'
 	}
 
 	APP_NAME = 'Timefy'
@@ -57,23 +59,30 @@ class Gui:
 		sourceLabel = tkinter.Label(frame, text='Source', bg=self.THEME['PRIMARY'], fg=self.THEME['TEXT'], width=8)
 		sourceLabel.grid(row=0, column=0)
 		self.sourceValue = tkinter.StringVar()
-		source = tkinter.Entry(frame, bg=self.THEME['SECONDARY'], textvariable=self.sourceValue, fg=self.THEME['TEXT'], width=60, borderwidth=5, relief=tkinter.FLAT)
+		source = tkinter.Entry(frame, bg=self.THEME['SECONDARY'], textvariable=self.sourceValue, fg=self.THEME['TEXT'], width=60, borderwidth=5, relief=tkinter.FLAT, state='disabled', disabledbackground=self.THEME['SECONDARY'], disabledforeground=self.THEME['TEXT'])
 		source.grid(row=0, column=1, pady=(6, 0))
 
 		outputLabel = tkinter.Label(frame, text='Output', bg=self.THEME['PRIMARY'], fg=self.THEME['TEXT'], width=8)
 		outputLabel.grid(column=0, row=1)
 		self.outputValue = tkinter.StringVar()
-		output = tkinter.Entry(frame, bg=self.THEME['SECONDARY'], textvariable=self.outputValue, fg=self.THEME['TEXT'], width=60, borderwidth=5, relief=tkinter.FLAT)
+		output = tkinter.Entry(frame, bg=self.THEME['SECONDARY'], textvariable=self.outputValue, fg=self.THEME['TEXT'], width=60, borderwidth=5, relief=tkinter.FLAT, state='disabled', disabledbackground=self.THEME['SECONDARY'], disabledforeground=self.THEME['TEXT'])
 		output.grid(row=1, column=1, pady=(6, 0))
 
-		generate = tkinter.Button(frame, text='GENERATE', bg='#3742fa', fg='#fff', bd=0,  padx=15, pady=5, command = self.__gen)
+		generate = tkinter.Button(frame, text='GENERATE', bg='#3742fa', fg='#fff', bd=0, padx=15, pady=5, command=self.__gen)
 		generate.grid(row=2, column=1, columnspan=2, sticky=tkinter.E, pady=(20, 0))
 
 		self.should_append = tkinter.IntVar()
-		append = tkinter.Checkbutton(frame, text="Append", selectcolor=self.THEME['SECONDARY'], relief=tkinter.FLAT, onvalue=1, offvalue=0, variable=self.should_append, bg=self.THEME['PRIMARY'], activebackground=self.THEME['PRIMARY'], activeforeground=self.THEME['TEXT'], fg=self.THEME['TEXT'])
-		append.grid(row=2, column=1, pady=(20, 0), padx=(175, 0))
+		# append = tkinter.Checkbutton(frame, text="Append", selectcolor=self.THEME['SECONDARY'], relief=tkinter.FLAT, onvalue=1, offvalue=0, variable=self.should_append, bg=self.THEME['PRIMARY'], activebackground=self.THEME['PRIMARY'], activeforeground=self.THEME['TEXT'], fg=self.THEME['TEXT'])
+		# append.grid(row=2, column=1, pady=(20, 0), padx=(175, 0))
+
+		reset = tkinter.Button(frame, text='RESET', bg=self.THEME['SECONDARY'], fg=self.THEME['TEXT'], padx=15, pady=5, bd=0, command=self.reset)
+		reset.grid(row=2, column=1, pady=(20, 0), padx=(175, 0))
+
+		github = tkinter.Label(frame, text='github.com/rodchenk', bg=self.THEME['PRIMARY'], fg=self.THEME['SEC_TEXT'], pady=5)
+		github.grid(row=2, column=0, columnspan=2, sticky=tkinter.W, pady=(20, 0), padx=10)
 
 		s = Style()
+
 		s.theme_use("default")
 		s.configure("TProgressbar", thickness=5, background='#26A65B', troughrelief='flat')
 		self.progress = Progressbar(frame, orient=tkinter.HORIZONTAL, length=465, mode='determinate', style="TProgressbar") 
@@ -81,6 +90,10 @@ class Gui:
 
 	def run(self):
 		self.top.mainloop()
+
+	def reset(self):
+		self.outputValue.set('')
+		self.sourceValue.set('')
 
 	def __show_progress(self):
 		self.progress.grid(row=3, column=0, columnspan=3, pady=(25, 0))
@@ -130,11 +143,12 @@ class Gui:
 
 	def __load_output(self):
 		fname = asksaveasfilename(filetypes=(("CSV Files", "*.csv;"), ("All files", "*.*") ))
+		if not fname:
+			return
 		if not fname.endswith('.csv'):
 			if fname[-1:] == '.':
 				fname = fname[:-1]
 			fname += '.csv'
-		# fname = askopenfilename(filetypes=(("CSV Files", "*.csv;"), ("All files", "*.*") ))
 		self.outputValue.set(fname)
 
 

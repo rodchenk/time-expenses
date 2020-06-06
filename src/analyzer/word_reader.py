@@ -25,8 +25,13 @@ class WordReader(AbstractReader):
 		images = filter(lambda x: x.startswith('word/media/'), all_files)
 		charts = filter(lambda x: x.startswith('word/charts/'), all_files)
 
+		_tw = 0
+		for word in content.split():
+			if not word.replace('.', '').replace(',', '').isdigit():
+				_tw += 1 
+
 		self.total_chars = len(list(filter(lambda x: x != ' ', list(content))))
-		self.total_words = len(content.split())
+		self.total_words = _tw
 		self.total_charts = len(list(charts))
 		self.total_images = len(list(images))
 		self.total_tables = len(document.tables)

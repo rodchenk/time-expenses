@@ -1,7 +1,7 @@
 #################################### User part start ##################################
 
 """ GUI Color Theme. Set True for light mode, Valid values True, False """
-DARK_THEME = True
+DARK_THEME = False
 
 """ Units for time expenses. Valid values are 'seconds', minutes', 'hours'  """
 UNITS = 'minutes'
